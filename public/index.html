@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TV-90 Video Player</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- YouTube IFrame API must load before app.js -->
+  <script src="https://www.youtube.com/iframe_api"></script>
+</head>
+<body>
+  <div class="room">
+    <div class="wallpaper"></div>
+    <div class="carpet"></div>
+
+    <div class="scene">
+
+      <!-- LEFT DECO -->
+      <div class="side-deco left-deco">
+        <div class="plant">🌿</div>
+        <div class="crt-warning">⚠ HIGH VOLTAGE</div>
+      </div>
+
+      <!-- TV UNIT -->
+      <div class="tv-stand">
+        <div class="tv-unit">
+
+          <!-- TV BODY -->
+          <div class="tv-body">
+            <div class="tv-top-label">SONY TRINITRON <span class="blink-slow">●</span></div>
+
+            <!-- SCREEN AREA -->
+            <div class="screen-bezel">
+              <div class="screen-wrap" id="screenWrap">
+                <div class="screen-inner" id="screenInner">
+
+                  <!-- idle / no signal -->
+                  <div class="idle-screen" id="idleScreen">
+                    <div class="idle-static"></div>
+                    <div class="idle-text">
+                      <span class="channel-num" id="channelNum">CH 03</span>
+                      <span class="no-signal">NO SIGNAL</span>
+                    </div>
+                  </div>
+
+                  <!-- youtube player div (YT API replaces this with iframe) -->
+                  <div id="ytPlayerDiv"></div>
+
+                  <!-- paused overlay -->
+                  <div class="paused-overlay" id="pausedOverlay">
+                    <span class="paused-label">II PAUSED</span>
+                  </div>
+
+                  <!-- static noise canvas -->
+                  <canvas id="staticCanvas"></canvas>
+
+                  <!-- CRT overlays (always on top) -->
+                  <div class="scanlines"></div>
+                  <div class="vignette"></div>
+                  <div class="glitch-bar"></div>
+                  <div class="noise-overlay" id="noiseOverlay"></div>
+
+                </div>
+              </div>
+            </div>
+
+            <!-- CONTROLS PANEL -->
+            <div class="controls-panel">
+              <div class="controls-left">
+                <div class="dial" id="dialChannel" title="Channel">
+                  <div class="dial-inner">CH</div>
+                </div>
+                <div class="tv-vol-ctrl">
+                  <button class="tv-vol-btn" id="tvVolUp" title="Volume Up">+</button>
+                  <span class="tv-vol-label">VOL</span>
+                  <button class="tv-vol-btn" id="tvVolDown" title="Volume Down">-</button>
+                </div>
+              </div>
+
+              <div class="controls-center">
+                <div class="power-btn" id="powerBtn" title="Power">
+                  <div class="power-icon">⏻</div>
+                </div>
+                <div class="led-row">
+                  <div class="led" id="ledPower"></div>
+                  <div class="led led-record" id="ledRecord"></div>
+                </div>
+              </div>
+
+              <div class="controls-right">
+                <div class="speaker-grill">
+                  <div class="speaker-holes">
+                    <span></span><span></span><span></span><span></span>
+                    <span></span><span></span><span></span><span></span>
+                    <span></span><span></span><span></span><span></span>
+                    <span></span><span></span><span></span><span></span>
+                    <span></span><span></span><span></span><span></span>
+                    <span></span><span></span><span></span><span></span>
+                    <span></span><span></span><span></span><span></span>
+                    <span></span><span></span><span></span><span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div><!-- /tv-body -->
+
+          <!-- VCR UNIT -->
+          <div class="vcr-unit" id="vcrUnit">
+            <div class="vcr-face">
+              <div class="vcr-brand">FUNAI <span class="vcr-model">VCR 2000</span></div>
+
+              <div class="cassette-slot-area">
+                <div class="cassette-slot" id="cassetteSlot">
+                  <div class="slot-opening">
+                    <div class="slot-label">▼ INSERT TAPE</div>
+                  </div>
+                  <div class="cassette" id="cassette">
+                    <div class="cassette-body">
+                      <div class="cassette-label">
+                        <div class="label-title" id="labelTitle">YOUTUBE</div>
+                        <div class="label-sub">VHS · SP · 120min</div>
+                        <div class="tape-reels">
+                          <div class="reel" id="reel1"></div>
+                          <div class="reel" id="reel2"></div>
+                        </div>
+                      </div>
+                      <div class="cassette-window">
+                        <div class="tape-visible"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="url-input-area">
+                  <div class="url-label">ENTER VIDEO URL:</div>
+                  <div class="url-row">
+                    <input type="text" id="urlInput" class="url-input"
+                           placeholder="https://youtube.com/watch?v=..."
+                           spellcheck="false" autocomplete="off" />
+                    <button class="play-btn" id="playBtn">▶ PLAY</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="vcr-controls">
+                <button class="vcr-btn" id="btnStop" title="Stop / Resume">■</button>
+                <button class="vcr-btn" id="btnRew" title="Hold to Rewind">◀◀</button>
+                <button class="vcr-btn vcr-btn-play" id="btnPlay2" title="Play">▶</button>
+                <button class="vcr-btn" id="btnFF" title="Hold to Fast Forward">▶▶</button>
+                <button class="vcr-btn" id="btnEject" title="Eject">⏏</button>
+              </div>
+
+              <div class="vcr-display">
+                <div class="vcr-time" id="vcrTime">00:00</div>
+                <div class="vcr-status" id="vcrStatus">STOP</div>
+              </div>
+
+              <div class="vcr-leds">
+                <div class="vcr-led" id="vcrLedPlay"></div>
+                <div class="vcr-led vcr-led-rec"></div>
+              </div>
+            </div>
+          </div><!-- /vcr-unit -->
+
+        </div><!-- /tv-unit -->
+      </div><!-- /tv-stand -->
+
+      <!-- RIGHT DECO -->
+      <div class="side-deco right-deco">
+        <div class="remote-wrap">
+          <div class="remote">
+            <div class="remote-brand">SONY</div>
+            <div class="remote-btn big-btn" id="remotePower">⏻</div>
+
+            <!-- Volume row -->
+            <div class="remote-vol-row">
+              <button class="remote-vol-btn" id="remoteVolDown">▼</button>
+              <span class="remote-vol-label">VOL</span>
+              <button class="remote-vol-btn" id="remoteVolUp">▲</button>
+            </div>
+
+            <div class="remote-dpad">
+              <span></span><span>▲</span><span></span>
+              <span>◀</span><span>●</span><span>▶</span>
+              <span></span><span>▼</span><span></span>
+            </div>
+            <div class="remote-numpad">
+              <span>1</span><span>2</span><span>3</span>
+              <span>4</span><span>5</span><span>6</span>
+              <span>7</span><span>8</span><span>9</span>
+              <span>*</span><span>0</span><span>#</span>
+            </div>
+          </div>
+        </div>
+        <div class="vhs-stack">
+          <div class="vhs-tape">THE MATRIX</div>
+          <div class="vhs-tape">HOME ALONE</div>
+          <div class="vhs-tape">JURASSIC PARK</div>
+          <div class="vhs-tape">BATMAN</div>
+        </div>
+      </div>
+
+    </div><!-- /scene -->
+
+    <!-- HISTORY PANEL -->
+    <div class="history-panel">
+      <div class="history-title">📼 RECENTLY PLAYED</div>
+      <div class="history-list" id="historyList"></div>
+      <button class="clear-btn" id="clearBtn">CLEAR HISTORY</button>
+    </div>
+
+    <!-- CHANNEL BUG -->
+    <div class="channel-bug">
+      <span class="ch-text">CH</span>
+      <span class="ch-num" id="chNum">03</span>
+    </div>
+
+    <!-- CLOCK -->
+    <div class="corner-clock" id="cornerClock"></div>
+
+  </div><!-- /room -->
+
+  <script src="app.js"></script>
+</body>
+</html>
