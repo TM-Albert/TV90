@@ -349,8 +349,16 @@ const staticCtx = staticCanvas.getContext('2d');
 staticCanvas.width  = 320;
 staticCanvas.height = 240;
 
-let staticAnimId = null;
-let staticActive  = false;
+let staticAnimId   = null;
+let staticActive   = false;
+let interferenceOn = true;
+
+const interferenceBtn = document.getElementById('interferenceBtn');
+interferenceBtn.addEventListener('click', () => {
+  interferenceOn = !interferenceOn;
+  interferenceBtn.textContent = `⚡ INTERFERENCE: ${interferenceOn ? 'ON' : 'OFF'}`;
+  interferenceBtn.classList.toggle('off', !interferenceOn);
+});
 
 function drawStaticFrame() {
   if (!staticActive) return;
@@ -389,7 +397,7 @@ function showStaticBurst() {
 function scheduleStaticBurst() {
   const delay = 10000 + Math.random() * 20000; // 10–30 s
   setTimeout(() => {
-    if (state.powered && state.playing && !state.paused) {
+    if (interferenceOn && state.powered && state.playing && !state.paused) {
       showStaticBurst();
     }
     scheduleStaticBurst();

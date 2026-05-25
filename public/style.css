@@ -763,6 +763,27 @@ body { overflow: hidden; height: 100vh; width: 100vw; cursor: default; }
   text-overflow: ellipsis;
 }
 .history-item:hover { background: rgba(0,255,65,0.1); border-color: rgba(0,255,65,0.3); color: var(--crt-green); }
+.interference-btn {
+  width: 100%;
+  background: rgba(0,255,65,0.08);
+  border: 1px solid rgba(0,255,65,0.3);
+  border-radius: 3px;
+  color: rgba(0,255,65,0.85);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px;
+  padding: 5px 4px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  transition: all 0.2s;
+}
+.interference-btn:hover { background: rgba(0,255,65,0.15); }
+.interference-btn.off {
+  background: rgba(80,80,80,0.15);
+  border-color: rgba(120,120,120,0.3);
+  color: rgba(160,160,160,0.7);
+}
+
 .clear-btn {
   width: 100%;
   background: transparent;
